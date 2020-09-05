@@ -93,7 +93,7 @@ pops <- paste0("<strong>Departement: </strong>", departement$DEPT)
 
 
 
-# Carte interactive portant sur les departement du Senegal et les echantillons de sols prelevées par SOTER 
+# Carte interactive 
 ```{r}
 leaflet(departement)%>%addPolygons(layerId = departement$DEPT,weight = 2,fill = TRUE,fillOpacity = 0,popup =pops,group = "polygons",fillColor = "red")%>%
   addTiles(group = "OSM (default)") %>%
