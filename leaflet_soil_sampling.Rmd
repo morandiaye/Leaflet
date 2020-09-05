@@ -1,7 +1,11 @@
-# Leaflet
-Utlisons les donnees issus  de la base de données SOTER pour visualiser les echantillons preleves au niveau du Senegal et representons en arriere plan les departement  du Senegal.
-Ainsi nous pouvons voire la repartition spatiale  des echantillons de sol en fonction des differents departements.
-
+---
+title: "Analyse  et represenetation spatiale des données SOTER"
+author: "Mor ndiaye"
+date: "05/09/2020"
+output:
+  html_document:
+    df_print: paged
+---
 Appelons les libraries necessaires pour la realisations des differents qui seront effectueé au cours de ce travail
 `
 ```{r , results="hide"}
@@ -12,19 +16,19 @@ library(leaflet)
 
 ```
 
-# Importons les donnees necessaires
+# Importons les donnees necessaires lie au sol
 
 ```{r,cache=TRUE}
 data_sol<-read.csv2("C:\\Users\\pc\\Downloads\\Modelisation_Soter_data_Senegal-master\\Modelisation_Soter_data_Senegal-master\\donnees soter.csv")
 
 ```
 
-Regardons quelques ligne sur les donnees importees
+Regardons quelques ligne sur les donnees importer
 
 ```{r}
 head(data_sol,3)
 ```
-# Creation Dataset 
+# Creation Dataset nouveau dataset
 
 Assignons un nouveau dataset apres elimination des NA sur les variable LONG et LAT
 ```{r}
@@ -44,7 +48,7 @@ le data  set en spatial dataframe
 coordinates(sol)<-~LNGI+LATI
 ```
 
-# Verifions la transformation operé
+# Verifions la transformation operer
 ```{r}
 str(sol)
 ```
@@ -84,7 +88,8 @@ dep<-readOGR("D:\\carto\\limite 2014 ANSD\\LIMITE_DEPT_2014_.shp")
 ```{r}
 departement<-spTransform(dep,crs("+init=epsg:4326"))
 ```
- Creation des pop up  pour le shapefile des departements du senegal et les echantions
+ 
+ ##
 ```{r}
 my_pops <- paste0("<strong>ID: </strong>", na.omit(sol$PRID),"<br>\n <strong> Organic Carbon (%): </strong>",round(na.omit(sol$total_carbone),3), "<br>\n <strong>soilpH:</strong>",round(na.omit(sol$PH),2),"<br>\n <strong> CEC (meq/100g): </strong>",round(na.omit(sol$CECS),2),"<br>\n <strong>Nitogen(%): </strong>",round(na.omit(sol$total_azote),2));
 pops <- paste0("<strong>Departement: </strong>", departement$DEPT)
@@ -93,7 +98,7 @@ pops <- paste0("<strong>Departement: </strong>", departement$DEPT)
 
 
 
-# Carte interactive 
+Carte interactive portant sur les departement du Senegal et les echantillons de sols prelevées par SOTER 
 ```{r}
 leaflet(departement)%>%addPolygons(layerId = departement$DEPT,weight = 2,fill = TRUE,fillOpacity = 0,popup =pops,group = "polygons",fillColor = "red")%>%
   addTiles(group = "OSM (default)") %>%
